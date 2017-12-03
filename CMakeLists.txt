@@ -166,9 +166,12 @@ if (WIN32)
   if (NOT MSVC)
     message(FATAL_ERROR "Only MSVC is supported on this platform")
   endif ()
+  
+  set(STATIC ${MSVC} CACHE BOOL "Link libraries statically")
 
   add_definitions(/D_CRT_SECURE_NO_WARNINGS /D_WIN32_WINNT=0x0600 /DSTATICLIB)
   include_directories(cryptonote/src/Platform/msc)
+  link_directories(cryptonote/external/rocksdb)
 
   set(PLATFORM_DIR Windows)
   set(BUILD_PLATFORM WIN32)
@@ -176,7 +179,16 @@ if (WIN32)
   set(QTMAIN Qt5::WinMain)
 
 elseif (UNIX)
-
+  
+  add_custom_target(
+     rocksdb
+     COMMAND make static_lib -Wno-undef -Wno-unused-result -Wno-unused-value
+     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cryptonote/external/rocksdb
+  )
+  add_library(rocksdblib STATIC IMPORTED GLOBAL)
+  set_target_properties(rocksdblib PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/cryptonote/external/rocksdb/librocksdb.a)
+  add_dependencies(rocksdblib rocksdb)
+  
   set(CRYPTONOTE_SOURCES ${CRYPTONOTE_SOURCES} cryptonote/external/miniupnpc/minissdpc.c)
 
   if (APPLE)
@@ -222,9 +234,10 @@ set(CRYPTONOTE_SOURCES ${CRYPTONOTE_SOURCES} ${PLATFORM_SOURCES} ${CRYPTONOTE_PL
 
 if(MSVC)
   add_library(rocksdblib STATIC IMPORTED GLOBAL)
-  set_target_properties(rocksdblib PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/rocksdblib.lib)
-else(MSVC)
-  add_subdirectory(cryptonote/external)
+  set_target_properties(rocksdblib PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}\\cryptonote\\external\\rocksdb\\build\\Release\\rocksdblib.lib)
+  add_dependencies(rocksdblib rocksdb)
+#else(MSVC)
+#  add_subdirectory(cryptonote/external)
 endif(MSVC)
 
 add_library(${CRYPTONOTE_LIB} STATIC ${CRYPTONOTE_SOURCES})
@@ -232,16 +245,17 @@ set_target_properties(${CRYPTONOTE_LIB} PROPERTIES COMPILE_DEFINITIONS _GNU_SOUR
 target_link_libraries(${CRYPTONOTE_LIB} ${Boost_LIBRARIES} ${Qt5DBus_LIBRARIES} rocksdblib)
 
 add_executable(${PROJECT_NAME} ${BUILD_PLATFORM} ${BUILD_RESOURCES} ${SOURCES} ${HEADERS} ${UIS} ${RCC})
-  
+
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS _GNU_SOURCE)
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ${QTMAIN} ${CRYPTONOTE_LIB} ${Qt5DBus_LIBRARIES} ${QRENCODE_LIB})
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ${QTMAIN} ${CRYPTONOTE_LIB} ${Qt5DBus_LIBRARIES} ${QRENCODE_LIB} rocksdblib)
 
 if (APPLE)
   qt5_use_modules(${PROJECT_NAME} PrintSupport)
 elseif (UNIX)
   target_link_libraries(${PROJECT_NAME} -lpthread)
 elseif (WIN32)
-  target_link_libraries(${PROJECT_NAME} Shlwapi.lib Rpcrt4.lib Wtsapi32.lib Imm32 Iphlpapi Winmm)
+  target_link_libraries(${PROJECT_NAME} Imm32 Iphlpapi Winmm UxTheme d3d9 dxguid Rpcrt4 Wtsapi32 Dwmapi)
+
 endif (APPLE)
 
 qt5_use_modules(${PROJECT_NAME} Widgets Gui Network)
