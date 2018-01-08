@@ -43,6 +43,8 @@
 #include "Gui/Common/QuestionDialog.h"
 #include "Gui/Common/QRCodeDialog.h"
 #include "Gui/Common/MnemonicDialog.h"
+#include "Gui/Common/OpenUriDialog.h"
+#include "Gui/Common/RequestPaymentDialog.h"
 #include "ICryptoNoteAdapter.h"
 #include "INodeAdapter.h"
 #include "IWalletAdapter.h"
@@ -75,8 +77,8 @@ namespace WalletGui {
 namespace {
 
 const int MAX_RECENT_WALLET_COUNT = 10;
-const char COMMUNITY_FORUM_URL[] = "https://karbovanetstalk.org";
-const char REPORT_ISSUE_URL[] = "https://karbovanets.org/contact";
+const char COMMUNITY_FORUM_URL[] = "https://forum.karbo.io";
+const char REPORT_ISSUE_URL[] = "https://karbo.io/contact";
 
 const char DONATION_URL_DONATION_TAG[] = "donation";
 const char DONATION_URL_LABEL_TAG[] = "label";
@@ -255,6 +257,7 @@ void MainWindow::walletOpened() {
   if (walletAdapter->isTrackingWallet()) {
     m_ui->m_sendButton->setEnabled(false);
     m_ui->m_addressBookButton->setEnabled(false);
+    m_ui->m_openPaymentRequestAction->setEnabled(false);
   }
   AccountKeys accountKeys = m_cryptoNoteAdapter->getNodeAdapter()->getWalletAdapter()->getAccountKeys(0);
   if (!m_deterministicAdapter.isDeterministic(accountKeys)) {
@@ -403,6 +406,8 @@ void MainWindow::setOpenedState() {
   m_ui->m_showSeedAction->setEnabled(true);
   m_ui->m_encryptWalletAction->setEnabled(!walletAdapter->isEncrypted());
   m_ui->m_changePasswordAction->setEnabled(walletAdapter->isEncrypted());
+  m_ui->m_openPaymentRequestAction->setEnabled(true);
+  m_ui->m_createPaymentRequestAction->setEnabled(true);
 
   m_ui->m_noWalletFrame->hide();
   m_ui->m_overviewFrame->show();
@@ -427,6 +432,8 @@ void MainWindow::setClosedState() {
   m_ui->m_encryptWalletAction->setEnabled(false);
   m_ui->m_changePasswordAction->setEnabled(false);
   m_ui->m_showSeedAction->setEnabled(false);
+  m_ui->m_openPaymentRequestAction->setEnabled(false);
+  m_ui->m_createPaymentRequestAction->setEnabled(false);
 
   m_ui->m_overviewFrame->hide();
   m_ui->m_sendFrame->hide();
@@ -607,22 +614,16 @@ void MainWindow::createWallet() {
       walletAdapter->close();
       walletAdapter->addObserver(this);
     }
-
     QString oldWalletFile = Settings::instance().getWalletFile();
     Settings::instance().setWalletFile(filePath);
-
     AccountKeys accountKeys = m_deterministicAdapter.generateDeterministicKeys();
-
     if (walletAdapter->createWithKeys(filePath, accountKeys) == IWalletAdapter::INIT_SUCCESS) {
       walletAdapter->save(CryptoNote::WalletSaveLevel::SAVE_ALL, true);
-
       Q_ASSERT(walletAdapter->isOpen());
       QString fileName = Settings::instance().getWalletFile();
       fileName.append(QString(".backup"));
       walletAdapter->exportWallet(fileName,false,CryptoNote::WalletSaveLevel::SAVE_KEYS_ONLY,true);
-
       showMnemonicSeed();
-
     } else {
       Settings::instance().setWalletFile(oldWalletFile);
     }
@@ -760,6 +761,16 @@ void MainWindow::encryptWallet() {
 
       walletAdapter->changePassword("", password);
     }
+  }
+  QString fileName = Settings::instance().getWalletFile();
+  fileName.append(QString(".backup"));
+  if (!fileName.isEmpty()) {
+    // remove old unencrypted backup
+    if(QFile::exists(fileName)) {
+       QFile::remove(fileName);
+    }
+    // create new encrypted backup
+    walletAdapter->exportWallet(fileName,false,CryptoNote::WalletSaveLevel::SAVE_KEYS_ONLY,true);
   }
 }
 
@@ -900,6 +911,25 @@ void MainWindow::restoreFromMnemonicSeed() {
     } else {
       Settings::instance().setWalletFile(oldWalletFile);
     }
+  }
+}
+
+void MainWindow::openPaymentRequestClicked() {
+  OpenUriDialog dlg(this);
+  if (dlg.exec() == QDialog::Accepted) {
+    QUrl request = dlg.getURI();
+    if (request.isEmpty()) {
+      return;
+    }
+    m_ui->m_sendFrame->urlReceived(request);
+    m_ui->m_sendButton->click();
+  }
+}
+
+void MainWindow::createPaymentRequestClicked() {
+  RequestPaymentDialog dlg(m_cryptoNoteAdapter, m_walletStateModel->index(0, WalletStateModel::COLUMN_ADDRESS).data().toString(), this);
+  if (dlg.exec() == QDialog::Accepted) {
+
   }
 }
 

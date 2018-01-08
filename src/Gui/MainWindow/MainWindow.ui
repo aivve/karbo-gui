@@ -935,14 +935,6 @@
     <addaction name="m_openWalletAction"/>
     <addaction name="m_closeWalletAction"/>
     <addaction name="m_recentWalletsAction"/>
-    <addaction name="m_backupWalletAction"/>
-    <addaction name="m_saveKeysAction"/>
-    <addaction name="m_resetAction"/>
-    <addaction name="m_importKeyAction"/>
-    <addaction name="m_exportKeyAction"/>
-    <addaction name="m_exportTrackingKeyAction"/>
-    <addaction name="m_showSeedAction"/>
-    <addaction name="m_importSeedAction"/>
     <addaction name="separator"/>
     <addaction name="m_exitAction"/>
    </widget>
@@ -955,9 +947,6 @@
       <string>Themes</string>
      </property>
     </widget>
-    <addaction name="m_encryptWalletAction"/>
-    <addaction name="m_changePasswordAction"/>
-    <addaction name="separator"/>
     <addaction name="m_autostartAction"/>
     <addaction name="m_minimizeToTrayAction"/>
     <addaction name="m_closeToTrayAction"/>
@@ -974,7 +963,34 @@
     <addaction name="m_aboutKarbovanetsAction"/>
     <addaction name="m_aboutQtAction"/>
    </widget>
+   <widget class="QMenu" name="menuPayment">
+    <property name="title">
+     <string>Payment</string>
+    </property>
+    <addaction name="m_createPaymentRequestAction"/>
+    <addaction name="m_openPaymentRequestAction"/>
+   </widget>
+   <widget class="QMenu" name="menuWallet">
+    <property name="title">
+     <string>Wallet</string>
+    </property>
+    <addaction name="m_encryptWalletAction"/>
+    <addaction name="m_changePasswordAction"/>
+    <addaction name="separator"/>
+    <addaction name="m_backupWalletAction"/>
+    <addaction name="m_saveKeysAction"/>
+    <addaction name="m_importKeyAction"/>
+    <addaction name="m_exportKeyAction"/>
+    <addaction name="m_exportTrackingKeyAction"/>
+    <addaction name="separator"/>
+    <addaction name="m_showSeedAction"/>
+    <addaction name="m_importSeedAction"/>
+    <addaction name="separator"/>
+    <addaction name="m_resetAction"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuWallet"/>
+   <addaction name="menuPayment"/>
    <addaction name="menuSettings"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -1148,6 +1164,16 @@
   <action name="m_createNondeterministicWalletAction">
    <property name="text">
     <string>Create nondeterministic wallet</string>
+   </property>
+  </action>
+  <action name="m_openPaymentRequestAction">
+   <property name="text">
+    <string>Open payment request</string>
+   </property>
+  </action>
+  <action name="m_createPaymentRequestAction">
+   <property name="text">
+    <string>Create payment request</string>
    </property>
   </action>
  </widget>
@@ -1709,6 +1735,38 @@
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>createNonDeterministicWallet()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>636</x>
+     <y>411</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_openPaymentRequestAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openPaymentRequestClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>636</x>
+     <y>411</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_createPaymentRequestAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>createPaymentRequestClicked()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'MainWindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.9.3
+** Created by: Qt User Interface Compiler version 5.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -67,6 +67,8 @@ public:
     QAction *m_showSeedAction;
     QAction *m_importSeedAction;
     QAction *m_createNondeterministicWalletAction;
+    QAction *m_openPaymentRequestAction;
+    QAction *m_createPaymentRequestAction;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout_2;
     QFrame *m_headerFrame;
@@ -128,6 +130,8 @@ public:
     QMenu *menuSettings;
     QMenu *menuThemes;
     QMenu *menuHelp;
+    QMenu *menuPayment;
+    QMenu *menuWallet;
     WalletGui::WalletStatusBar *statusBar;
     QButtonGroup *m_toolButtonGroup;
 
@@ -206,6 +210,10 @@ public:
         m_importSeedAction->setObjectName(QStringLiteral("m_importSeedAction"));
         m_createNondeterministicWalletAction = new QAction(MainWindow);
         m_createNondeterministicWalletAction->setObjectName(QStringLiteral("m_createNondeterministicWalletAction"));
+        m_openPaymentRequestAction = new QAction(MainWindow);
+        m_openPaymentRequestAction->setObjectName(QStringLiteral("m_openPaymentRequestAction"));
+        m_createPaymentRequestAction = new QAction(MainWindow);
+        m_createPaymentRequestAction->setObjectName(QStringLiteral("m_createPaymentRequestAction"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
         verticalLayout_2 = new QVBoxLayout(centralwidget);
@@ -588,12 +596,18 @@ public:
         menuThemes->setObjectName(QStringLiteral("menuThemes"));
         menuHelp = new QMenu(menubar);
         menuHelp->setObjectName(QStringLiteral("menuHelp"));
+        menuPayment = new QMenu(menubar);
+        menuPayment->setObjectName(QStringLiteral("menuPayment"));
+        menuWallet = new QMenu(menubar);
+        menuWallet->setObjectName(QStringLiteral("menuWallet"));
         MainWindow->setMenuBar(menubar);
         statusBar = new WalletGui::WalletStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         MainWindow->setStatusBar(statusBar);
 
         menubar->addAction(menuFile->menuAction());
+        menubar->addAction(menuWallet->menuAction());
+        menubar->addAction(menuPayment->menuAction());
         menubar->addAction(menuSettings->menuAction());
         menubar->addAction(menuHelp->menuAction());
         menuFile->addAction(m_createWalletAction);
@@ -601,19 +615,8 @@ public:
         menuFile->addAction(m_openWalletAction);
         menuFile->addAction(m_closeWalletAction);
         menuFile->addAction(m_recentWalletsAction);
-        menuFile->addAction(m_backupWalletAction);
-        menuFile->addAction(m_saveKeysAction);
-        menuFile->addAction(m_resetAction);
-        menuFile->addAction(m_importKeyAction);
-        menuFile->addAction(m_exportKeyAction);
-        menuFile->addAction(m_exportTrackingKeyAction);
-        menuFile->addAction(m_showSeedAction);
-        menuFile->addAction(m_importSeedAction);
         menuFile->addSeparator();
         menuFile->addAction(m_exitAction);
-        menuSettings->addAction(m_encryptWalletAction);
-        menuSettings->addAction(m_changePasswordAction);
-        menuSettings->addSeparator();
         menuSettings->addAction(m_autostartAction);
         menuSettings->addAction(m_minimizeToTrayAction);
         menuSettings->addAction(m_closeToTrayAction);
@@ -624,6 +627,21 @@ public:
         menuHelp->addAction(m_reportIssueAction);
         menuHelp->addAction(m_aboutKarbovanetsAction);
         menuHelp->addAction(m_aboutQtAction);
+        menuPayment->addAction(m_createPaymentRequestAction);
+        menuPayment->addAction(m_openPaymentRequestAction);
+        menuWallet->addAction(m_encryptWalletAction);
+        menuWallet->addAction(m_changePasswordAction);
+        menuWallet->addSeparator();
+        menuWallet->addAction(m_backupWalletAction);
+        menuWallet->addAction(m_saveKeysAction);
+        menuWallet->addAction(m_importKeyAction);
+        menuWallet->addAction(m_exportKeyAction);
+        menuWallet->addAction(m_exportTrackingKeyAction);
+        menuWallet->addSeparator();
+        menuWallet->addAction(m_showSeedAction);
+        menuWallet->addAction(m_importSeedAction);
+        menuWallet->addSeparator();
+        menuWallet->addAction(m_resetAction);
 
         retranslateUi(MainWindow);
         QObject::connect(m_createWalletAction, SIGNAL(triggered()), MainWindow, SLOT(createWallet()));
@@ -657,81 +675,85 @@ public:
         QObject::connect(m_showSeedAction, SIGNAL(triggered()), MainWindow, SLOT(showMnemonicSeed()));
         QObject::connect(m_importSeedAction, SIGNAL(triggered()), MainWindow, SLOT(restoreFromMnemonicSeed()));
         QObject::connect(m_createNondeterministicWalletAction, SIGNAL(triggered()), MainWindow, SLOT(createNonDeterministicWallet()));
+        QObject::connect(m_openPaymentRequestAction, SIGNAL(triggered()), MainWindow, SLOT(openPaymentRequestClicked()));
+        QObject::connect(m_createPaymentRequestAction, SIGNAL(triggered()), MainWindow, SLOT(createPaymentRequestClicked()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", Q_NULLPTR));
-        m_exitAction->setText(QApplication::translate("MainWindow", "Exit", Q_NULLPTR));
-#ifndef QT_NO_SHORTCUT
-        m_exitAction->setShortcut(QApplication::translate("MainWindow", "Ctrl+Q", Q_NULLPTR));
-#endif // QT_NO_SHORTCUT
-        m_createWalletAction->setText(QApplication::translate("MainWindow", "Create wallet", Q_NULLPTR));
-        m_openWalletAction->setText(QApplication::translate("MainWindow", "Open wallet", Q_NULLPTR));
-        m_encryptWalletAction->setText(QApplication::translate("MainWindow", "Encrypt wallet", Q_NULLPTR));
-        m_changePasswordAction->setText(QApplication::translate("MainWindow", "Change password", Q_NULLPTR));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
+        m_exitAction->setText(QApplication::translate("MainWindow", "Exit", 0));
+        m_exitAction->setShortcut(QApplication::translate("MainWindow", "Ctrl+Q", 0));
+        m_createWalletAction->setText(QApplication::translate("MainWindow", "Create wallet", 0));
+        m_openWalletAction->setText(QApplication::translate("MainWindow", "Open wallet", 0));
+        m_encryptWalletAction->setText(QApplication::translate("MainWindow", "Encrypt wallet", 0));
+        m_changePasswordAction->setText(QApplication::translate("MainWindow", "Change password", 0));
 #ifndef QT_NO_TOOLTIP
-        m_changePasswordAction->setToolTip(QApplication::translate("MainWindow", "Change password", Q_NULLPTR));
+        m_changePasswordAction->setToolTip(QApplication::translate("MainWindow", "Change password", 0));
 #endif // QT_NO_TOOLTIP
-        m_aboutKarbovanetsAction->setText(QApplication::translate("MainWindow", "About Karbovanets", Q_NULLPTR));
-        m_aboutQtAction->setText(QApplication::translate("MainWindow", "About Qt", Q_NULLPTR));
-        m_backupWalletAction->setText(QApplication::translate("MainWindow", "Backup wallet", Q_NULLPTR));
-        m_autostartAction->setText(QApplication::translate("MainWindow", "Start on system login", Q_NULLPTR));
-        m_minimizeToTrayAction->setText(QApplication::translate("MainWindow", "Minimize to tray", Q_NULLPTR));
-        m_closeToTrayAction->setText(QApplication::translate("MainWindow", "Close to tray", Q_NULLPTR));
-        m_preferencesAction->setText(QApplication::translate("MainWindow", "Preferences", Q_NULLPTR));
-        m_recentWalletsAction->setText(QApplication::translate("MainWindow", "Recent wallets", Q_NULLPTR));
-        m_exportTrackingKeyAction->setText(QApplication::translate("MainWindow", "Export tracking key", Q_NULLPTR));
+        m_aboutKarbovanetsAction->setText(QApplication::translate("MainWindow", "About Karbovanets", 0));
+        m_aboutQtAction->setText(QApplication::translate("MainWindow", "About Qt", 0));
+        m_backupWalletAction->setText(QApplication::translate("MainWindow", "Backup wallet", 0));
+        m_autostartAction->setText(QApplication::translate("MainWindow", "Start on system login", 0));
+        m_minimizeToTrayAction->setText(QApplication::translate("MainWindow", "Minimize to tray", 0));
+        m_closeToTrayAction->setText(QApplication::translate("MainWindow", "Close to tray", 0));
+        m_preferencesAction->setText(QApplication::translate("MainWindow", "Preferences", 0));
+        m_recentWalletsAction->setText(QApplication::translate("MainWindow", "Recent wallets", 0));
+        m_exportTrackingKeyAction->setText(QApplication::translate("MainWindow", "Export tracking key", 0));
 #ifndef QT_NO_TOOLTIP
-        m_exportTrackingKeyAction->setToolTip(QApplication::translate("MainWindow", "Export tracking key", Q_NULLPTR));
+        m_exportTrackingKeyAction->setToolTip(QApplication::translate("MainWindow", "Export tracking key", 0));
 #endif // QT_NO_TOOLTIP
-        m_importKeyAction->setText(QApplication::translate("MainWindow", "Import key", Q_NULLPTR));
+        m_importKeyAction->setText(QApplication::translate("MainWindow", "Import key", 0));
 #ifndef QT_NO_TOOLTIP
-        m_importKeyAction->setToolTip(QApplication::translate("MainWindow", "Import key", Q_NULLPTR));
+        m_importKeyAction->setToolTip(QApplication::translate("MainWindow", "Import key", 0));
 #endif // QT_NO_TOOLTIP
-        m_communityForumAction->setText(QApplication::translate("MainWindow", "Community forum", Q_NULLPTR));
-        m_reportIssueAction->setText(QApplication::translate("MainWindow", "Report an issue", Q_NULLPTR));
-        m_resetAction->setText(QApplication::translate("MainWindow", "Reset wallet", Q_NULLPTR));
-        m_saveKeysAction->setText(QApplication::translate("MainWindow", "Save wallet keys", Q_NULLPTR));
-        m_exportKeyAction->setText(QApplication::translate("MainWindow", "Export key", Q_NULLPTR));
+        m_communityForumAction->setText(QApplication::translate("MainWindow", "Community forum", 0));
+        m_reportIssueAction->setText(QApplication::translate("MainWindow", "Report an issue", 0));
+        m_resetAction->setText(QApplication::translate("MainWindow", "Reset wallet", 0));
+        m_saveKeysAction->setText(QApplication::translate("MainWindow", "Save wallet keys", 0));
+        m_exportKeyAction->setText(QApplication::translate("MainWindow", "Export key", 0));
 #ifndef QT_NO_TOOLTIP
-        m_exportKeyAction->setToolTip(QApplication::translate("MainWindow", "Export key", Q_NULLPTR));
+        m_exportKeyAction->setToolTip(QApplication::translate("MainWindow", "Export key", 0));
 #endif // QT_NO_TOOLTIP
-        m_closeWalletAction->setText(QApplication::translate("MainWindow", "Close wallet", Q_NULLPTR));
-        m_showSeedAction->setText(QApplication::translate("MainWindow", "Show mnemonic seed", Q_NULLPTR));
-        m_importSeedAction->setText(QApplication::translate("MainWindow", "Import mnemonic seed", Q_NULLPTR));
-        m_createNondeterministicWalletAction->setText(QApplication::translate("MainWindow", "Create nondeterministic wallet", Q_NULLPTR));
-        m_noWalletLabel->setText(QApplication::translate("MainWindow", "No active wallet", Q_NULLPTR));
-        m_walletLabel->setText(QApplication::translate("MainWindow", "Your wallet:", Q_NULLPTR));
+        m_closeWalletAction->setText(QApplication::translate("MainWindow", "Close wallet", 0));
+        m_showSeedAction->setText(QApplication::translate("MainWindow", "Show mnemonic seed", 0));
+        m_importSeedAction->setText(QApplication::translate("MainWindow", "Import mnemonic seed", 0));
+        m_createNondeterministicWalletAction->setText(QApplication::translate("MainWindow", "Create nondeterministic wallet", 0));
+        m_openPaymentRequestAction->setText(QApplication::translate("MainWindow", "Open payment request", 0));
+        m_createPaymentRequestAction->setText(QApplication::translate("MainWindow", "Create payment request", 0));
+        m_noWalletLabel->setText(QApplication::translate("MainWindow", "No active wallet", 0));
+        m_walletLabel->setText(QApplication::translate("MainWindow", "Your wallet:", 0));
 #ifndef QT_NO_TOOLTIP
-        m_addressLabel->setToolTip(QApplication::translate("MainWindow", "Click to copy", Q_NULLPTR));
+        m_addressLabel->setToolTip(QApplication::translate("MainWindow", "Click to copy", 0));
 #endif // QT_NO_TOOLTIP
-        m_addressLabel->setText(QApplication::translate("MainWindow", "ADDRESS", Q_NULLPTR));
+        m_addressLabel->setText(QApplication::translate("MainWindow", "ADDRESS", 0));
         m_notEncryptedIconLabel->setText(QString());
-        m_notEncryptedTextLabel->setText(QApplication::translate("MainWindow", "Wallet not encrypted!", Q_NULLPTR));
-        m_encryptButton->setText(QApplication::translate("MainWindow", "Set password", Q_NULLPTR));
-        m_showQrCodeButton->setText(QApplication::translate("MainWindow", "Show QR Code", Q_NULLPTR));
-        m_copyAddressButton->setText(QApplication::translate("MainWindow", "Copy address", Q_NULLPTR));
-        m_copyAddressLabel->setText(QApplication::translate("MainWindow", "Address copied to clipboard", Q_NULLPTR));
-        m_balanceTextLabel->setText(QApplication::translate("MainWindow", "Total balance", Q_NULLPTR));
+        m_notEncryptedTextLabel->setText(QApplication::translate("MainWindow", "Wallet not encrypted!", 0));
+        m_encryptButton->setText(QApplication::translate("MainWindow", "Set password", 0));
+        m_showQrCodeButton->setText(QApplication::translate("MainWindow", "Show QR Code", 0));
+        m_copyAddressButton->setText(QApplication::translate("MainWindow", "Copy address", 0));
+        m_copyAddressLabel->setText(QApplication::translate("MainWindow", "Address copied to clipboard", 0));
+        m_balanceTextLabel->setText(QApplication::translate("MainWindow", "Total balance", 0));
 #ifndef QT_NO_TOOLTIP
-        m_balanceLabel->setToolTip(QApplication::translate("MainWindow", "Click to copy", Q_NULLPTR));
+        m_balanceLabel->setToolTip(QApplication::translate("MainWindow", "Click to copy", 0));
 #endif // QT_NO_TOOLTIP
-        m_balanceLabel->setText(QApplication::translate("MainWindow", "0.00", Q_NULLPTR));
-        m_balanceCopyLabel->setText(QApplication::translate("MainWindow", "Copied!", Q_NULLPTR));
+        m_balanceLabel->setText(QApplication::translate("MainWindow", "0.00", 0));
+        m_balanceCopyLabel->setText(QApplication::translate("MainWindow", "Copied!", 0));
         m_balanceIconLabel->setText(QString());
-        m_overviewButton->setText(QApplication::translate("MainWindow", "OVERVIEW", Q_NULLPTR));
-        m_sendButton->setText(QApplication::translate("MainWindow", "SEND", Q_NULLPTR));
-        m_transactionsButton->setText(QApplication::translate("MainWindow", "HISTORY", Q_NULLPTR));
-        m_blockExplorerButton->setText(QApplication::translate("MainWindow", "BLOCK EXPLORER", Q_NULLPTR));
-        m_addressBookButton->setText(QApplication::translate("MainWindow", "CONTACTS", Q_NULLPTR));
-        m_miningButton->setText(QApplication::translate("MainWindow", "MINING", Q_NULLPTR));
-        menuFile->setTitle(QApplication::translate("MainWindow", "File", Q_NULLPTR));
-        menuSettings->setTitle(QApplication::translate("MainWindow", "Settings", Q_NULLPTR));
-        menuThemes->setTitle(QApplication::translate("MainWindow", "Themes", Q_NULLPTR));
-        menuHelp->setTitle(QApplication::translate("MainWindow", "Help", Q_NULLPTR));
+        m_overviewButton->setText(QApplication::translate("MainWindow", "OVERVIEW", 0));
+        m_sendButton->setText(QApplication::translate("MainWindow", "SEND", 0));
+        m_transactionsButton->setText(QApplication::translate("MainWindow", "HISTORY", 0));
+        m_blockExplorerButton->setText(QApplication::translate("MainWindow", "BLOCK EXPLORER", 0));
+        m_addressBookButton->setText(QApplication::translate("MainWindow", "CONTACTS", 0));
+        m_miningButton->setText(QApplication::translate("MainWindow", "MINING", 0));
+        menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
+        menuSettings->setTitle(QApplication::translate("MainWindow", "Settings", 0));
+        menuThemes->setTitle(QApplication::translate("MainWindow", "Themes", 0));
+        menuHelp->setTitle(QApplication::translate("MainWindow", "Help", 0));
+        menuPayment->setTitle(QApplication::translate("MainWindow", "Payment", 0));
+        menuWallet->setTitle(QApplication::translate("MainWindow", "Wallet", 0));
     } // retranslateUi
 
 };

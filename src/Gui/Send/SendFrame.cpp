@@ -19,6 +19,7 @@
 #include <QTime>
 #include <QPair>
 #include <QUrlQuery>
+#include <QMessageBox>
 #include <QMetaMethod>
 
 #include <Wallet/WalletErrors.h>
@@ -26,6 +27,7 @@
 #include "SendFrame.h"
 #include "Settings/Settings.h"
 #include "Gui/Common/QuestionDialog.h"
+#include "Gui/Common/OpenUriDialog.h"
 #include "ICryptoNoteAdapter.h"
 #include "IDonationManager.h"
 #include "INodeAdapter.h"
@@ -244,6 +246,10 @@ void SendFrame::urlReceived(const QUrl& _url) {
 
   QUrlQuery urlQuery(_url);
   QString address = _url.path();
+  if (!m_cryptoNoteAdapter->isValidAddress(address)) {
+    QMessageBox::warning(this, tr("Warning"), tr("Address is invalid"));
+    return;
+  }
   qreal amount = QLocale(QLocale::English).toDouble(urlQuery.queryItemValue(PAYMENT_URL_AMOUNT_TAG));
   QString paymentId = urlQuery.queryItemValue(PAYMENT_URL_PAYMENT_ID_TAG);
   QString message = urlQuery.queryItemValue(PAYMENT_URL_MESSAGE_TAG);
